@@ -1,15 +1,28 @@
 import React from 'react';
-import CardList from './CardList';
-import SearchBox from './SearchBox';
-import { robots } from './robots';
+import CardList from '../components/CardList';
+import SearchBox from '../components/SearchBox';
+import Scroll from '../components/Scroll';
+import './App.css';
+import axios from 'axios';
 
 class App extends React.Component {
     constructor() {
         super();
         this.state = {
-            robots: robots,
+            robots: [],
             searchField: ''
         }
+    }
+
+    componentDidMount() {
+        const getData = async () => {
+            const res = await axios.get('https://jsonplaceholder.typicode.com/users');
+            this.setState({ robots: res.data });
+        };
+
+        getData();
+
+        
     }
 
     onsearchChange = (event) => {
@@ -22,9 +35,11 @@ class App extends React.Component {
         });
         return (
             <div className='tc'>
-              <h1>Robofriends</h1>
+              <h1 className='f1'>Robofriends</h1>
               <SearchBox searchChange={this.onsearchChange}/>
-              <CardList robots={filteredRobots}/>
+              <Scroll>
+                <CardList robots={filteredRobots}/>
+              </Scroll>
             </div>
         );
     }
